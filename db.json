@@ -19,49 +19,54 @@
       "tarifasEmissao": {
         "emissaoPix": {
           "autoContratacao": 5.59,
-          "maxima": 9,
-          "minima": 1
+          "minima": 1,
+          "maxima": 9
         },
         "emissaoBoleto": {
           "autoContratacao": 6,
-          "maxima": 4,
-          "minima": 2
+          "minima": 2,
+          "maxima": 4
         },
         "emissaoCredito": {
           "autoContratacao": 6,
-          "maxima": 4,
-          "minima": 2
+          "minima": 2,
+          "maxima": 4
         }
       },
       "tarifasSomenteEmissao": {
         "emissaoPix": {
-          "minima": 1.5
+          "minima": 1.5,
+          "maxima": 9
         },
         "emissaoBoleto": {
-          "minima": 3
+          "minima": 3,
+          "maxima": 4
         },
         "emissaoCredito": {
-          "minima": 5
+          "minima": 4,
+          "maxima": 6
         }
       },
       "tarifasLiquidacao": {
         "liquidacaoPix": {
           "autoContratacao": 5.59,
-          "maxima": 9,
-          "minima": 1
+          "minima": 1,
+          "maxima": 9
         },
         "liquidacaoBoleto": {
           "autoContratacao": 6,
-          "maxima": 4,
-          "minima": 2
+          "minima": 21,
+          "maxima": 30
         }
       },
       "tarifasSomenteLiquidacao": {
         "liquidacaoPix": {
-          "minima": 1
+          "minima": 1,
+          "maxima": 9
         },
         "liquidacaoBoleto": {
-          "minima": 2
+          "minima": 11,
+          "maxima": 20
         }
       }
     }
