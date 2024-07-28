@@ -9,6 +9,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 type FormType = {
   emissaoPix: number;
@@ -30,6 +31,8 @@ function Tarifas() {
     setValue,
     formState: { errors },
   } = useForm<FormType>({ mode: "onChange" });
+
+  const navigate = useNavigate();
 
   const cadastrarTarifas = (values: FormType) => {
     console.log(values);
@@ -110,240 +113,141 @@ function Tarifas() {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit(cadastrarTarifas)}
-      style={{ maxWidth: "400px" }}
-    >
-      <Typography variant="h3">Tarifas</Typography>
-      <br />
+    <>
+      <form
+        onSubmit={handleSubmit(cadastrarTarifas)}
+        style={{ maxWidth: "400px" }}
+      >
+        <Typography variant="h3">Tarifas</Typography>
+        <br />
 
-      {/* Inicio sessão switchs */}
-      <Controller
-        control={control}
-        name="permiteAutoContratacao"
-        defaultValue={false}
-        render={({ field }) => (
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={() => {
-                  field.onChange;
-                  handlePermiteAutoContratacao();
-                }}
-                checked={field.value}
-              />
-            }
-            label="Permite auto contratacao"
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="permiteEmissao"
-        defaultValue={false}
-        render={({ field }) => (
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={() => {
-                  field.onChange;
-                  handlePermiteEmissao();
-                }}
-                checked={field.value}
-              />
-            }
-            label="Permite somente emissão"
-          />
-        )}
-      />
-      <Controller
-        control={control}
-        name="permiteLiquidacao"
-        defaultValue={false}
-        render={({ field }) => (
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={() => {
-                  field.onChange;
-                  handlePermiteLiquidacao();
-                }}
-                checked={field.value}
-              />
-            }
-            label="Permite somente liquidação"
-          />
-        )}
-      />
-      <br />
-   {/* Final sessão switchs */}
+        {/* Inicio sessão switchs */}
+        <Controller
+          control={control}
+          name="permiteAutoContratacao"
+          defaultValue={false}
+          render={({ field }) => (
+            <FormControlLabel
+              control={
+                <Switch
+                  onChange={() => {
+                    field.onChange;
+                    handlePermiteAutoContratacao();
+                  }}
+                  checked={field.value}
+                />
+              }
+              label="Permite auto contratacao"
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="permiteEmissao"
+          defaultValue={false}
+          render={({ field }) => (
+            <FormControlLabel
+              control={
+                <Switch
+                  onChange={() => {
+                    field.onChange;
+                    handlePermiteEmissao();
+                  }}
+                  checked={field.value}
+                />
+              }
+              label="Permite somente emissão"
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="permiteLiquidacao"
+          defaultValue={false}
+          render={({ field }) => (
+            <FormControlLabel
+              control={
+                <Switch
+                  onChange={() => {
+                    field.onChange;
+                    handlePermiteLiquidacao();
+                  }}
+                  checked={field.value}
+                />
+              }
+              label="Permite somente liquidação"
+            />
+          )}
+        />
+        <br />
+        {/* Final sessão switchs */}
 
-   {/* Inicio sessão tarifas emissão */}
-      <br />
-      {(watchPermiteEmissao || switchsEmissaoELiquidacaoDesligados()) && (
-        <Box display="flex" gap={2} flexDirection="column">
-          <Typography variant="h5">Tarifas de Emissão</Typography>
-          <Controller
-            control={control}
-            defaultValue={0}
-            name="emissaoPix"
-            rules={{
-              required: "O campo é obrigatório",
-              min: {
-                value: 1.56,
-                message: "O Valor não pode ser maior do que 1.56",
-              },
-              max: {
-                value: 20,
-                message: "O Valor não pode ser maior do que 20",
-              },
-            }}
-            render={({ field: { name, onChange, value } }) => (
-              <TextField
-                placeholder="Tarifa Emissão Pix"
-                size="small"
-                type="number"
-                fullWidth
-                disabled={watchPermiteAutoContratacao}
-                id={name}
-                name={name}
-                value={value}
-                onChange={onChange}
-                error={!!errors.emissaoPix}
-                helperText={errors.emissaoPix?.message}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="emissaoBoleto"
-            defaultValue={0}
-            rules={{
-              required: "O campo é obrigatório",
-              min: {
-                value: 1.21,
-                message: "O Valor não pode ser maior do que 1.21",
-              },
-              max: {
-                value: 10,
-                message: "O Valor não pode ser maior do que 10",
-              },
-            }}
-            render={({ field: { name, onChange, value } }) => (
-              <TextField
-                placeholder="Tarifa Emissão Boleto"
-                size="small"
-                type="number"
-                fullWidth
-                disabled={watchPermiteAutoContratacao}
-                name={name}
-                value={value}
-                onChange={onChange}
-                error={!!errors.emissaoBoleto}
-                helperText={errors.emissaoBoleto?.message}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="emissaoCredito"
-            defaultValue={0}
-            rules={{
-              required: "O campo é obrigatório",
-              min: {
-                value: 3,
-                message: "O Valor não pode ser maior do que 3",
-              },
-              max: {
-                value: 30,
-                message: "O Valor não pode ser maior do que 30",
-              },
-            }}
-            render={({ field: { name, onChange, value } }) => (
-              <TextField
-                placeholder="Tarifa Emissão Crédito"
-                size="small"
-                type="number"
-                fullWidth
-                disabled={watchPermiteAutoContratacao}
-                name={name}
-                value={value}
-                onChange={onChange}
-                error={!!errors.emissaoCredito}
-                helperText={errors.emissaoCredito?.message}
-              />
-            )}
-          />
-          <br />
-        </Box>
-      )}
-   {/* Final sessão tarifas emissão */}
-
-   {/* Inicio sessão tarifas liquidação */}
-      {(watchPermiteLiquidacao || switchsEmissaoELiquidacaoDesligados()) && (
-        <Box display="flex" gap={2} flexDirection="column">
-          <Typography variant="h5">Tarifas de Liquidação</Typography>
-          <Controller
-            control={control}
-            name="liquidacaoPix"
-            defaultValue={0}
-            rules={{
-              required: "O campo é obrigatório",
-              min: {
-                value: 1.67,
-                message: "O Valor não pode ser maior do que 1.67",
-              },
-              max: {
-                value: 20,
-                message: "O Valor não pode ser maior do que 20",
-              },
-            }}
-            render={({ field: { name, onChange, value } }) => (
-              <TextField
-                placeholder="Tarifa Liquidação Pix"
-                type="number"
-                size="small"
-                fullWidth
-                disabled={watchPermiteAutoContratacao}
-                name={name}
-                value={value}
-                onChange={onChange}
-                error={!!errors.liquidacaoPix}
-                helperText={errors.liquidacaoPix?.message}
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name="liquidacaoBoleto"
-            defaultValue={0}
-            rules={{
-              required: "O campo é obrigatório",
-              min: {
-                value: 1.56,
-                message: "O Valor não pode ser maior do que 1.56",
-              },
-              max: {
-                value: 10,
-                message: "O Valor não pode ser maior do que 10",
-              },
-            }}
-            render={({ field: { name, onChange, value } }) => (
-              <TextField
-                placeholder="Tarifa Liquidação Boleto"
-                type="number"
-                size="small"
-                fullWidth
-                disabled={watchPermiteAutoContratacao}
-                name={name}
-                value={value}
-                onChange={onChange}
-                error={!!errors.liquidacaoBoleto}
-                helperText={errors.liquidacaoBoleto?.message}
-              />
-            )}
-          />
-          {!watchPermiteEmissao && watchPermiteLiquidacao && (
+        {/* Inicio sessão tarifas emissão */}
+        <br />
+        {(watchPermiteEmissao || switchsEmissaoELiquidacaoDesligados()) && (
+          <Box display="flex" gap={2} flexDirection="column">
+            <Typography variant="h5">Tarifas de Emissão</Typography>
+            <Controller
+              control={control}
+              defaultValue={0}
+              name="emissaoPix"
+              rules={{
+                required: "O campo é obrigatório",
+                min: {
+                  value: 1.56,
+                  message: "O Valor não pode ser maior do que 1.56",
+                },
+                max: {
+                  value: 20,
+                  message: "O Valor não pode ser maior do que 20",
+                },
+              }}
+              render={({ field: { name, onChange, value } }) => (
+                <TextField
+                  placeholder="Tarifa Emissão Pix"
+                  size="small"
+                  type="number"
+                  fullWidth
+                  disabled={watchPermiteAutoContratacao}
+                  id={name}
+                  name={name}
+                  value={value}
+                  onChange={onChange}
+                  error={!!errors.emissaoPix}
+                  helperText={errors.emissaoPix?.message}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="emissaoBoleto"
+              defaultValue={0}
+              rules={{
+                required: "O campo é obrigatório",
+                min: {
+                  value: 1.21,
+                  message: "O Valor não pode ser maior do que 1.21",
+                },
+                max: {
+                  value: 10,
+                  message: "O Valor não pode ser maior do que 10",
+                },
+              }}
+              render={({ field: { name, onChange, value } }) => (
+                <TextField
+                  placeholder="Tarifa Emissão Boleto"
+                  size="small"
+                  type="number"
+                  fullWidth
+                  disabled={watchPermiteAutoContratacao}
+                  name={name}
+                  value={value}
+                  onChange={onChange}
+                  error={!!errors.emissaoBoleto}
+                  helperText={errors.emissaoBoleto?.message}
+                />
+              )}
+            />
             <Controller
               control={control}
               name="emissaoCredito"
@@ -368,30 +272,130 @@ function Tarifas() {
                   disabled={watchPermiteAutoContratacao}
                   name={name}
                   value={value}
-                  // value={value ?? 0} // essa forma resolve o problema de erro no console.
                   onChange={onChange}
                   error={!!errors.emissaoCredito}
                   helperText={errors.emissaoCredito?.message}
                 />
               )}
             />
-          )}
-          <br />
-        </Box>
-      )}
-   {/* Final sessão tarifas liquidação */}
+            <br />
+          </Box>
+        )}
+        {/* Final sessão tarifas emissão */}
 
-      <Button
-        variant="contained"
-        style={{ height: "54px" }}
-        size="large"
-        type="submit"
-        fullWidth
-      >
-        Cadastrar
+        {/* Inicio sessão tarifas liquidação */}
+        {(watchPermiteLiquidacao || switchsEmissaoELiquidacaoDesligados()) && (
+          <Box display="flex" gap={2} flexDirection="column">
+            <Typography variant="h5">Tarifas de Liquidação</Typography>
+            <Controller
+              control={control}
+              name="liquidacaoPix"
+              defaultValue={0}
+              rules={{
+                required: "O campo é obrigatório",
+                min: {
+                  value: 1.67,
+                  message: "O Valor não pode ser maior do que 1.67",
+                },
+                max: {
+                  value: 20,
+                  message: "O Valor não pode ser maior do que 20",
+                },
+              }}
+              render={({ field: { name, onChange, value } }) => (
+                <TextField
+                  placeholder="Tarifa Liquidação Pix"
+                  type="number"
+                  size="small"
+                  fullWidth
+                  disabled={watchPermiteAutoContratacao}
+                  name={name}
+                  value={value}
+                  onChange={onChange}
+                  error={!!errors.liquidacaoPix}
+                  helperText={errors.liquidacaoPix?.message}
+                />
+              )}
+            />
+            <Controller
+              control={control}
+              name="liquidacaoBoleto"
+              defaultValue={0}
+              rules={{
+                required: "O campo é obrigatório",
+                min: {
+                  value: 1.56,
+                  message: "O Valor não pode ser maior do que 1.56",
+                },
+                max: {
+                  value: 10,
+                  message: "O Valor não pode ser maior do que 10",
+                },
+              }}
+              render={({ field: { name, onChange, value } }) => (
+                <TextField
+                  placeholder="Tarifa Liquidação Boleto"
+                  type="number"
+                  size="small"
+                  fullWidth
+                  disabled={watchPermiteAutoContratacao}
+                  name={name}
+                  value={value}
+                  onChange={onChange}
+                  error={!!errors.liquidacaoBoleto}
+                  helperText={errors.liquidacaoBoleto?.message}
+                />
+              )}
+            />
+            {!watchPermiteEmissao && watchPermiteLiquidacao && (
+              <Controller
+                control={control}
+                name="emissaoCredito"
+                defaultValue={0}
+                rules={{
+                  required: "O campo é obrigatório",
+                  min: {
+                    value: 3,
+                    message: "O Valor não pode ser maior do que 3",
+                  },
+                  max: {
+                    value: 30,
+                    message: "O Valor não pode ser maior do que 30",
+                  },
+                }}
+                render={({ field: { name, onChange, value } }) => (
+                  <TextField
+                    placeholder="Tarifa Emissão Crédito"
+                    size="small"
+                    type="number"
+                    fullWidth
+                    disabled={watchPermiteAutoContratacao}
+                    name={name}
+                    value={value}
+                    // value={value ?? 0} // essa forma resolve o problema de erro no console.
+                    onChange={onChange}
+                    error={!!errors.emissaoCredito}
+                    helperText={errors.emissaoCredito?.message}
+                  />
+                )}
+              />
+            )}
+            <br />
+          </Box>
+        )}
+        {/* Final sessão tarifas liquidação */}
+
+        <Button variant="contained" size="large" type="submit" fullWidth>
+          Cadastrar
+        </Button>
+        <DevTool control={control} />
+      </form>
+
+      <br />
+      <Button variant="text" onClick={() => navigate("/busca")}>
+        Voltar
       </Button>
-      <DevTool control={control} />
-    </form>
+    </>
   );
 }
 export default Tarifas;
