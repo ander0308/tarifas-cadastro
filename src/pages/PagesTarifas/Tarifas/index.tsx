@@ -19,6 +19,10 @@ function Tarifas() {
 
   const navigate = useNavigate();
 
+  const {
+    data: { tarifas },
+  } = JSON.parse(sessionStorage.getItem("tarifas.data") || "{}");
+
   const cadastrarTarifas = (values: FormTarifasType) => {
     console.log(values);
     sessionStorage.setItem("tarifas", JSON.stringify(values));
@@ -31,6 +35,8 @@ function Tarifas() {
   const switchsEmissaoELiquidacaoDesligados = () => {
     return !watchPermiteEmissao && !watchPermiteLiquidacao;
   };
+
+  const { emissaoBoleto, emissaoCredito, emissaoPix } = tarifas.tarifasEmissao;
 
   const handleZerarTarifas = () => {
     setValue("emissaoPix", 0);
@@ -46,9 +52,15 @@ function Tarifas() {
       setValue("permiteEmissao", false);
       setValue("permiteLiquidacao", false);
 
-      setValue("emissaoPix", 12, { shouldValidate: true });
-      setValue("emissaoBoleto", 9, { shouldValidate: true });
-      setValue("emissaoCredito", 23, { shouldValidate: true });
+      setValue("emissaoPix", emissaoPix.autoContratacao, {
+        shouldValidate: true,
+      });
+      setValue("emissaoBoleto", emissaoBoleto.autoContratacao, {
+        shouldValidate: true,
+      });
+      setValue("emissaoCredito", emissaoCredito.autoContratacao, {
+        shouldValidate: true,
+      });
       setValue("liquidacaoPix", 1.99, { shouldValidate: true });
       setValue("liquidacaoBoleto", 5.23, { shouldValidate: true });
     } else {
@@ -92,6 +104,30 @@ function Tarifas() {
     }
   };
 
+  const getValorMaximo = (tipoTarifa: { maxima: number }) => {
+
+    return {
+      value: tipoTarifa.maxima,
+      message: `Valor maximo deve ser ${tipoTarifa.maxima}`,
+    };
+  };
+
+  const getValorMinimoValidado = (tipoTarifa: {
+    minima: number;
+    autoContratacao: number;
+  }) => {
+    const valorTarifaMinima = watchPermiteAutoContratacao
+      ? 0
+      : tipoTarifa.minima;
+
+      console.log("getValorMinimo",valorTarifaMinima)
+
+    return {
+      value: valorTarifaMinima,
+      message: `Valor maximo deve ser ${valorTarifaMinima}`,
+    };
+  };
+
   return (
     <>
       <form
@@ -120,6 +156,9 @@ function Tarifas() {
             errors,
             watchPermiteAutoContratacao,
             switchsEmissaoELiquidacaoDesligados,
+            getValorMaximo,
+            getValorMinimoValidado,
+            tarifas,
           }}
         />
         {/* Final sessão tarifas emissão */}

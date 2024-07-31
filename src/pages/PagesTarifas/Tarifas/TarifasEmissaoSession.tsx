@@ -9,6 +9,18 @@ type TarifasEmissaoSessionProps = {
   control: Control<FormTarifasType, any>;
   errors: FieldErrors<FormTarifasType>;
   watchPermiteAutoContratacao: boolean;
+
+  getValorMaximo: (tipo: any) => {
+    value: number;
+    message: string;
+  };
+
+  getValorMinimoValidado: (tipo: any) => {
+    value: number;
+    message: string;
+  };
+
+  tarifas: any;
 };
 
 export const TarifasEmissaoSession = ({
@@ -17,21 +29,21 @@ export const TarifasEmissaoSession = ({
   control,
   errors,
   watchPermiteAutoContratacao,
+  getValorMaximo,
+  getValorMinimoValidado,
+  tarifas,
 }: TarifasEmissaoSessionProps) => {
+  // const keyEmissao = watchPermiteEmissao
+  //   ? "tarifasSomenteEmissao"
+  //   : "tarifasEmissao";
 
-
-  const keyEmissao = watchPermiteEmissao ? "tarifasSomenteEmissao" : "tarifasEmissao"
-
-
-  const emissaoPixCustom = useCustomTarifas(keyEmissao, "emissaoPix")
-  const emissaoBoletoCustom = useCustomTarifas(keyEmissao, "emissaoBoleto")
-  const emissaoCreditoCustom = useCustomTarifas(keyEmissao, "emissaoCredito")
-
+  // const emissaoPixCustom = useCustomTarifas(keyEmissao, "emissaoPix");
+  // const emissaoBoletoCustom = useCustomTarifas(keyEmissao, "emissaoBoleto");
+  // const emissaoCreditoCustom = useCustomTarifas(keyEmissao, "emissaoCredito");
 
   if (!watchPermiteEmissao && !switchsEmissaoELiquidacaoDesligados()) {
     return <br />;
   }
-
 
   return (
     <>
@@ -44,14 +56,8 @@ export const TarifasEmissaoSession = ({
           name="emissaoPix"
           rules={{
             required: "O campo é obrigatório",
-            min: {
-              value: emissaoPixCustom.min?.value,
-              message: emissaoPixCustom.min?.message || "Msg padrão",
-            },
-            max: {
-              value: emissaoPixCustom.max?.value,
-              message: emissaoPixCustom.max?.message || "Msg padrão",
-            },
+            min: getValorMinimoValidado(tarifas.tarifasEmissao.emissaoPix),
+            max: getValorMaximo(tarifas.tarifasEmissao.emissaoPix),
           }}
           render={({ field: { name, onChange, value } }) => (
             <TextField
@@ -75,14 +81,8 @@ export const TarifasEmissaoSession = ({
           defaultValue={0}
           rules={{
             required: "O campo é obrigatório",
-            min: {
-              value: emissaoBoletoCustom.min?.value,
-              message: emissaoBoletoCustom.min?.message || "Msg padrão",
-            },
-            max: {
-              value: emissaoBoletoCustom.max?.value,
-              message: emissaoBoletoCustom.max?.message || "Msg padrão",
-            },
+            min: getValorMinimoValidado(tarifas.tarifasEmissao.emissaoBoleto),
+            max: getValorMaximo(tarifas.tarifasEmissao.emissaoBoleto),
           }}
           render={({ field: { name, onChange, value } }) => (
             <TextField
@@ -105,14 +105,8 @@ export const TarifasEmissaoSession = ({
           defaultValue={0}
           rules={{
             required: "O campo é obrigatório",
-            min: {
-              value: emissaoCreditoCustom.min?.value,
-              message: emissaoCreditoCustom.min?.message || "Msg padrão",
-            },
-            max: {
-              value: emissaoCreditoCustom.max?.value,
-              message: emissaoCreditoCustom.max?.message || "Msg padrão",
-            },
+            min: getValorMinimoValidado(tarifas.tarifasEmissao.emissaoCredito),
+            max: getValorMaximo(tarifas.tarifasEmissao.emissaoCredito),
           }}
           render={({ field: { name, onChange, value } }) => (
             <TextField

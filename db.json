@@ -14,13 +14,12 @@
     "disponibilizaAutoContratacao": true,
     "disponibilizaSomenteEmissao": true,
     "disponibilizaSomenteLiquidacao": true,
-    "disponibilizaCobrancaNaEmissaoELiquidacao": true,
     "tarifas": {
       "tarifasEmissao": {
         "emissaoPix": {
           "autoContratacao": 5.59,
           "minima": 1,
-          "maxima": 9
+          "maxima": 13
         },
         "emissaoBoleto": {
           "autoContratacao": 6,
@@ -65,6 +64,10 @@
           "maxima": 9
         },
         "liquidacaoBoleto": {
+          "minima": 11,
+          "maxima": 20
+        },
+        "emissaoCredito": {
           "minima": 11,
           "maxima": 20
         }
