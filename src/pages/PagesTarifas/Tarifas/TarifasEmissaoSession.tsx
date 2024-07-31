@@ -1,7 +1,7 @@
 import { Box, TextField, Typography } from "@mui/material";
 import { type Control, Controller, type FieldErrors } from "react-hook-form";
 import type { FormTarifasType } from "./types";
-import useCustomTarifas from "../../../hooks/useCustomTarifas";
+import type { getValidationRules } from "./utilsFunction";
 
 type TarifasEmissaoSessionProps = {
   watchPermiteEmissao: boolean;
@@ -9,6 +9,9 @@ type TarifasEmissaoSessionProps = {
   control: Control<FormTarifasType, any>;
   errors: FieldErrors<FormTarifasType>;
   watchPermiteAutoContratacao: boolean;
+  emissaoPixRules: ReturnType<typeof getValidationRules>;
+  emissaoBoletoRules: ReturnType<typeof getValidationRules>;
+  emissaoCreditoRules: ReturnType<typeof getValidationRules>;
 };
 
 export const TarifasEmissaoSession = ({
@@ -17,21 +20,15 @@ export const TarifasEmissaoSession = ({
   control,
   errors,
   watchPermiteAutoContratacao,
+  emissaoPixRules,
+  emissaoBoletoRules,
+  emissaoCreditoRules,
 }: TarifasEmissaoSessionProps) => {
-
-
-  const keyEmissao = watchPermiteEmissao ? "tarifasSomenteEmissao" : "tarifasEmissao"
-
-
-  const emissaoPixCustom = useCustomTarifas(keyEmissao, "emissaoPix")
-  const emissaoBoletoCustom = useCustomTarifas(keyEmissao, "emissaoBoleto")
-  const emissaoCreditoCustom = useCustomTarifas(keyEmissao, "emissaoCredito")
 
 
   if (!watchPermiteEmissao && !switchsEmissaoELiquidacaoDesligados()) {
     return <br />;
   }
-
 
   return (
     <>
@@ -42,17 +39,7 @@ export const TarifasEmissaoSession = ({
           control={control}
           defaultValue={0}
           name="emissaoPix"
-          rules={{
-            required: "O campo é obrigatório",
-            min: {
-              value: emissaoPixCustom.min?.value,
-              message: emissaoPixCustom.min?.message || "Msg padrão",
-            },
-            max: {
-              value: emissaoPixCustom.max?.value,
-              message: emissaoPixCustom.max?.message || "Msg padrão",
-            },
-          }}
+          rules={emissaoPixRules}
           render={({ field: { name, onChange, value } }) => (
             <TextField
               placeholder="Tarifa Emissão Pix"
@@ -73,17 +60,7 @@ export const TarifasEmissaoSession = ({
           control={control}
           name="emissaoBoleto"
           defaultValue={0}
-          rules={{
-            required: "O campo é obrigatório",
-            min: {
-              value: emissaoBoletoCustom.min?.value,
-              message: emissaoBoletoCustom.min?.message || "Msg padrão",
-            },
-            max: {
-              value: emissaoBoletoCustom.max?.value,
-              message: emissaoBoletoCustom.max?.message || "Msg padrão",
-            },
-          }}
+          rules={emissaoBoletoRules}
           render={({ field: { name, onChange, value } }) => (
             <TextField
               placeholder="Tarifa Emissão Boleto"
@@ -103,17 +80,7 @@ export const TarifasEmissaoSession = ({
           control={control}
           name="emissaoCredito"
           defaultValue={0}
-          rules={{
-            required: "O campo é obrigatório",
-            min: {
-              value: emissaoCreditoCustom.min?.value,
-              message: emissaoCreditoCustom.min?.message || "Msg padrão",
-            },
-            max: {
-              value: emissaoCreditoCustom.max?.value,
-              message: emissaoCreditoCustom.max?.message || "Msg padrão",
-            },
-          }}
+          rules={emissaoCreditoRules}
           render={({ field: { name, onChange, value } }) => (
             <TextField
               placeholder="Tarifa Emissão Crédito"

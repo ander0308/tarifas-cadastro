@@ -1,12 +1,14 @@
-import { useForm } from "react-hook-form";
 import { DevTool } from "@hookform/devtools";
+import { useForm } from "react-hook-form";
 
 import { Button, Typography } from "@mui/material";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import type { FormTarifasType } from "./types";
-import { TarifasEmissaoSession } from "./TarifasEmissaoSession";
+import useCustomTarifas from "../../../hooks/useCustomTarifas";
 import { SwitchSession } from "./SwitchSession";
+import { TarifasEmissaoSession } from "./TarifasEmissaoSession";
 import { TarifasLiquidacaoSession } from "./TarifasLiquidacaoSession";
+import type { FormTarifasType, FormularioValidateProps } from "./types";
 
 function Tarifas() {
   const {
@@ -15,12 +17,22 @@ function Tarifas() {
     watch,
     setValue,
     formState: { errors },
+    trigger,
   } = useForm<FormTarifasType>({ mode: "onChange" });
 
   const navigate = useNavigate();
 
   const cadastrarTarifas = (values: FormTarifasType) => {
+    const formattedValues = {
+      ...values,
+      emissaoPix: Number(values.emissaoPix),
+      emissaoBoleto: Number(values.emissaoBoleto),
+      emissaoCredito: Number(values.emissaoCredito),
+      liquidacaoPix: Number(values.liquidacaoPix),
+      liquidacaoBoleto: Number(values.liquidacaoBoleto),
+    }
     console.log(values);
+    console.log(formattedValues);
     sessionStorage.setItem("tarifas", JSON.stringify(values));
   };
 
@@ -92,6 +104,76 @@ function Tarifas() {
     }
   };
 
+  useEffect(() => {
+    if (
+      watchPermiteAutoContratacao !== undefined ||
+      watchPermiteEmissao !== undefined ||
+      watchPermiteLiquidacao !== undefined
+    ) {
+      trigger();
+    }
+  }, [
+    trigger,
+    watchPermiteAutoContratacao,
+    watchPermiteEmissao,
+    watchPermiteLiquidacao,
+  ]);
+
+  // ------ INICIO Vars de sessão liquidacao
+  const keyLiquidacao = watchPermiteLiquidacao
+    ? "tarifasSomenteLiquidacao"
+    : "tarifasLiquidacao";
+
+  const liquidacaoPixCustom = useCustomTarifas(keyLiquidacao, "liquidacaoPix");
+  const liquidacaoBoletoCustom = useCustomTarifas(
+    keyLiquidacao,
+    "liquidacaoBoleto"
+  );
+  const liquidacaoEmissaoCreditoCustom = useCustomTarifas(
+    keyLiquidacao,
+    "emissaoCredito"
+  );
+
+  const liquidacaoPixRules = getRules(liquidacaoPixCustom);
+  const liquidacaoBoletoRules = getRules(liquidacaoBoletoCustom);
+  const liquidacaoEmissaoCreditoRules = getRules(liquidacaoEmissaoCreditoCustom);
+  // ------ FIM Vars de sessão liquidacao
+
+  // ------ INICIO Vars de sessão emissao
+  const keyEmissao = watchPermiteEmissao
+    ? "tarifasSomenteEmissao"
+    : "tarifasEmissao";
+
+  const emissaoPixCustom = useCustomTarifas(keyEmissao, "emissaoPix");
+  const emissaoBoletoCustom = useCustomTarifas(keyEmissao, "emissaoBoleto");
+  const emissaoCreditoCustom = useCustomTarifas(keyEmissao, "emissaoCredito");
+
+  const emissaoPixRules = getRules(emissaoPixCustom);
+  const emissaoBoletoRules = getRules(emissaoBoletoCustom);
+  const emissaoCreditoRules = getRules(emissaoCreditoCustom);
+  // ------ FIM Vars de sessão emissao
+
+  function getRules(tarifaCustom: FormularioValidateProps) {
+    const MAX_VALUE = 9999999;
+    const MIN_VALUE = 0;
+
+    return {
+      required: "O campo é obrigatório",
+      min: watchPermiteAutoContratacao
+        ? MIN_VALUE
+        : {
+            value: tarifaCustom?.min?.value || MIN_VALUE,
+            message: tarifaCustom?.min?.message || "Msg Padrão",
+          },
+      max: watchPermiteAutoContratacao
+        ? MAX_VALUE
+        : {
+            value: tarifaCustom?.max?.value || MAX_VALUE,
+            message: tarifaCustom?.max?.message || "Msg Padrão",
+          },
+    };
+  }
+
   return (
     <>
       <form
@@ -120,6 +202,9 @@ function Tarifas() {
             errors,
             watchPermiteAutoContratacao,
             switchsEmissaoELiquidacaoDesligados,
+            emissaoPixRules,
+            emissaoBoletoRules,
+            emissaoCreditoRules,
           }}
         />
         {/* Final sessão tarifas emissão */}
@@ -129,10 +214,13 @@ function Tarifas() {
           {...{
             control,
             errors,
-            watchPermiteAutoContratacao,
-            watchPermiteEmissao,
             watchPermiteLiquidacao,
             switchsEmissaoELiquidacaoDesligados,
+            liquidacaoPixRules,
+            watchPermiteAutoContratacao,
+            liquidacaoBoletoRules,
+            watchPermiteEmissao,
+            liquidacaoEmissaoCreditoRules,
           }}
         />
         {/* Final sessão tarifas liquidação */}

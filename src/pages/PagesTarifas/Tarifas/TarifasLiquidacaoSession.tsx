@@ -1,8 +1,7 @@
 import { Box, TextField, Typography } from "@mui/material";
 import { type Control, Controller, type FieldErrors } from "react-hook-form";
 import type { FormTarifasType } from "./types";
-import useCustomTarifas from "../../../hooks/useCustomTarifas";
-import { getValidationRules } from "./utilsFunction";
+import type { getValidationRules } from "./utilsFunction";
 
 type TarifasLiquidacaoSessionProps = {
   watchPermiteEmissao: boolean;
@@ -11,6 +10,9 @@ type TarifasLiquidacaoSessionProps = {
   control: Control<FormTarifasType, any>;
   errors: FieldErrors<FormTarifasType>;
   watchPermiteAutoContratacao: boolean;
+  liquidacaoPixRules?: ReturnType<typeof getValidationRules>;
+  liquidacaoBoletoRules?: ReturnType<typeof getValidationRules>;
+  liquidacaoEmissaoCreditoRules?: ReturnType<typeof getValidationRules>;
 };
 
 export const TarifasLiquidacaoSession = ({
@@ -20,21 +22,10 @@ export const TarifasLiquidacaoSession = ({
   watchPermiteEmissao,
   watchPermiteLiquidacao,
   switchsEmissaoELiquidacaoDesligados,
+  liquidacaoPixRules,
+  liquidacaoBoletoRules,
+  liquidacaoEmissaoCreditoRules,
 }: TarifasLiquidacaoSessionProps) => {
-
-  const keyLiquidacao = watchPermiteLiquidacao
-    ? "tarifasSomenteLiquidacao"
-    : "tarifasLiquidacao";
-
-  const liquidacaoPixCustom = useCustomTarifas(keyLiquidacao, "liquidacaoPix");
-  const liquidacaoBoletoCustom = useCustomTarifas(
-    keyLiquidacao,
-    "liquidacaoBoleto"
-  );
-  const emissaoCreditoCustom = useCustomTarifas(
-    "tarifasEmissao",
-    "emissaoCredito"
-  );
 
   if (!watchPermiteLiquidacao && !switchsEmissaoELiquidacaoDesligados()) {
     return <br />;
@@ -47,10 +38,7 @@ export const TarifasLiquidacaoSession = ({
         control={control}
         name="liquidacaoPix"
         defaultValue={0}
-        rules={getValidationRules(
-          watchPermiteAutoContratacao,
-          liquidacaoPixCustom
-        )}
+        rules={liquidacaoPixRules}
         render={({ field: { name, onChange, value } }) => (
           <TextField
             placeholder="Tarifa Liquidação Pix"
@@ -70,7 +58,7 @@ export const TarifasLiquidacaoSession = ({
         control={control}
         name="liquidacaoBoleto"
         defaultValue={0}
-        rules={getValidationRules(watchPermiteAutoContratacao, liquidacaoBoletoCustom)}
+        rules={liquidacaoBoletoRules}
         render={({ field: { name, onChange, value } }) => (
           <TextField
             placeholder="Tarifa Liquidação Boleto"
@@ -91,10 +79,7 @@ export const TarifasLiquidacaoSession = ({
           control={control}
           name="emissaoCredito"
           defaultValue={0}
-          rules={getValidationRules(
-            watchPermiteAutoContratacao,
-            emissaoCreditoCustom
-          )}
+          rules={liquidacaoEmissaoCreditoRules}
           render={({ field: { name, onChange, value } }) => (
             <TextField
               placeholder="Tarifa Emissão Crédito"

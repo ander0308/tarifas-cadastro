@@ -50,23 +50,27 @@
       "tarifasLiquidacao": {
         "liquidacaoPix": {
           "autoContratacao": 5.59,
-          "minima": 1,
+          "minima": 4,
           "maxima": 9
         },
         "liquidacaoBoleto": {
           "autoContratacao": 6,
-          "minima": 21,
-          "maxima": 30
+          "minima": 6,
+          "maxima": 9
         }
       },
       "tarifasSomenteLiquidacao": {
         "liquidacaoPix": {
-          "minima": 1,
-          "maxima": 9
+          "minima": 8,
+          "maxima": 19
         },
         "liquidacaoBoleto": {
           "minima": 11,
           "maxima": 20
+        },
+        "emissaoCredito": {
+          "minima": 7,
+          "maxima": 37
         }
       }
     }
